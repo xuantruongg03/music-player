@@ -54,7 +54,7 @@
                         <ScrollPane fx:id="list" layoutX="19.0" layoutY="98.0" prefHeight="261.0" prefWidth="347.0" style="-fx-background: #CFF5E7; -fx-background-color: #CFF5E7;" vbarPolicy="NEVER" />
                     </children>
                 </AnchorPane>
-                <Slider fx:id="percent" layoutX="50.0" layoutY="530.0" opacity="0.49" prefHeight="24.0" prefWidth="612.0" />
+                <Slider fx:id="percent" layoutX="50.0" layoutY="530.0" opacity="0.49" prefHeight="24.0" prefWidth="612.0" onMouseReleased="#setPercent" />
                 <Label fx:id="timeEnd" layoutX="666.0" layoutY="534.0" text="00:00">
                     <font>
                         <Font size="11.0" />
@@ -67,7 +67,7 @@
                 </Label>
                 <FontAwesomeIcon glyphName="VOLUME_UP" layoutX="761.0" layoutY="547.0" onMouseClicked="#showVolume" size="15" />
                 <FontAwesomeIcon fx:id="showPopup" glyphName="LIST" layoutX="727.0" layoutY="546.0" onMouseClicked="#showPopup" size="15" />
-                <Slider fx:id="volume" layoutX="756.0" layoutY="447.0" onMouseReleased="#setVolume" orientation="VERTICAL" prefHeight="74.0" prefWidth="24.0" value="100.0" visible="false" />
+                <Slider fx:id="volume" layoutX="756.0" layoutY="447.0" onMouseReleased="#setVolume" orientation="VERTICAL" prefHeight="74.0" prefWidth="24.0" value="30.0" visible="false" />
             </children>
         </AnchorPane>
     </children>

@@ -1,52 +1,72 @@
 package com.example.demo1;
 
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+
 import java.io.File;
 
-public abstract class Music {
-    protected long musicTimePosition;
-    protected File musicPath;
-    protected String musicType;
-    protected boolean pause;
+public class Music {
+    private long musicTimePosition;
+    private File musicPath;
+    private Media media;
+    private MediaPlayer player;
+    private boolean pause;
 
     public Music(String musicLocation) {
         try {
             musicPath = new File(musicLocation);
             if (musicPath.exists()) {
                 this.musicTimePosition = 0;
-                musicType = musicLocation.substring(musicLocation.length() - 3, musicLocation.length());
                 pause = true;
             }
+            media = new Media(musicPath.toURI().toString());
+            player = new MediaPlayer(media);
         } catch (Exception e) {
             System.out.println("Music path doesn't exist.");
         }
     }
 
     public long getMusicTimePosition() {
-        return musicTimePosition;
+        return (long) player.getCurrentTime().toSeconds();
     }
 
     public boolean isPause() {
         return pause;
     }
 
-    public abstract void play();
+    public void play(){
+        player.play();
+        pause = false;
+    };
 
-    public abstract void pause();
+    public void pause(){
+        player.pause();
+        pause = true;
+    };
 
-    public abstract void stop();
+    public void stop(){
+        player.stop();
+        pause = true;
+    };
 
-    // Lấy tổng thời gian bài hát (microsecond)
-    public abstract long getMusicTimeLength();
+    public long getMusicTimeLength(){
+        return (long) player.getTotalDuration().toSeconds();
+    };
 
-    // Lấy phần trăm hiện tại của bài hát (0.0 - 1.0)
-    public abstract double getMusicTimePercent();
+    public double getMusicTimePercent(){
+        return (double) player.getCurrentTime().toSeconds() / player.getTotalDuration().toSeconds();
+    }
 
-    // Đặt phần trăm hiện tại của bài hát (0.0 - 1.0)
-    public abstract void setMusicTimePercent(double timePercent);
+    public void setMusicTimePercent(double timePercent){
+        player.seek(player.getTotalDuration().multiply(timePercent));
 
-    // Lấy thông số volume hiện tại (0.0f - 1.0f)
-    public abstract float getVolume();
+    };
 
-    // Đặt thông số volume hiện tại (0.0f - 1.0f)
-    public abstract void setVolume(float volume);
+    public float getVolume(){
+        return (float) player.getVolume();
+    };
+
+    public void setVolume(float volume){
+        player.setVolume(volume);
+    };
 }
