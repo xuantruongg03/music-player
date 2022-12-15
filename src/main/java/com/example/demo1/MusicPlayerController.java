@@ -10,8 +10,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -43,6 +41,7 @@ public class MusicPlayerController implements javafx.fxml.Initializable {
     private VBox vBox = new VBox();
     private Music music;
 
+    private float volumeValue = 0.3f;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -108,17 +107,21 @@ public class MusicPlayerController implements javafx.fxml.Initializable {
             timeEnd.setText("00:00");
             timePosition.setText("00:00");
         } else {
-            music = new WavMusic(songs.get(indexSong).getPath());
-            music.setVolume((float) volume.getValue() / 100);
-            setTimeEnd();
-            changePercent();
+            createMusic();
         }
     }
 
     public String convertTime(long time) {
-        long minute = time / 60000000;
-        long second = (time % 60000000) / 1000000;
-        return String.format("%02d:%02d", minute, second);
+        String second = String.valueOf(time % 60);
+        if (second.length() == 1) {
+            second = "0" + second;
+        }
+        //convert time to string minute
+        String minute = String.valueOf(time / 60);
+        if (minute.length() == 1) {
+            minute = "0" + minute;
+        }
+        return minute + ":" + second;
     }
 
     public void setTimePosition() {
@@ -133,8 +136,14 @@ public class MusicPlayerController implements javafx.fxml.Initializable {
                             timePosition.setText(convertTime(music.getMusicTimePosition()));
                             percent.setValue(music.getMusicTimePercent() * 100);
                             if (percent.getValue() >= 99.5) {
+                                if (stateRandom == true) {
+                                    indexSong = (int) (Math.random() * songs.size());
+                                } else {
+                                    indexSong++;
+                                }
                                 next(null);
                             }
+                            setTimeEnd();
                         }
                     });
                 } else {
@@ -147,7 +156,9 @@ public class MusicPlayerController implements javafx.fxml.Initializable {
     public void setTimeEnd() {
         timeEnd.setText(convertTime(music.getMusicTimeLength()));
     }
-
+    public  void  setVolume(){
+        music.setVolume(volumeValue);
+    }
     public void addSong() {
         if (statePlay == true) {
             music.stop();
@@ -165,7 +176,7 @@ public class MusicPlayerController implements javafx.fxml.Initializable {
                 vBox.getChildren().clear();
                 songs.clear();
                 for (File file : listOfFiles) {
-                    if (file.isFile() && file.getName().endsWith(".wav")) {
+                    if (file.isFile() && (file.getName().endsWith(".wav") || file.getName().endsWith(".mp3"))) {
                         String name = file.getName().substring(0, file.getName().length() - 4);
                         String path = file.getPath();
                         songs.add(new Song(name, "Unknown", path));
@@ -213,24 +224,32 @@ public class MusicPlayerController implements javafx.fxml.Initializable {
         }
     }
 
+    private void createMusic() {
+        music = new Music(songs.get(indexSong).getPath());
+        setVolume();
+        setTimePosition();
+        setTimeEnd();
+    }
+
     public void changeSong() {
         music.stop();
-        music = new WavMusic(songs.get(indexSong).getPath());
-        music.setVolume((float) volume.getValue() / 100);
+        createMusic();
         music.play();
         setRote();
     }
 
-    public void changePercent() {
-        percent.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> {
+    public void setPercent(MouseEvent mouseEvent) {
+        if(songs.size() > 0) {
             if (statePlay == true) {
                 music.pause();
-                music.setMusicTimePercent(percent.getValue() / 100);
+                music.setMusicTimePercent(percent.getValue()/100);
                 music.play();
             } else {
-                music.setMusicTimePercent(percent.getValue() / 100);
+                music.setMusicTimePercent(percent.getValue()/100);
             }
-        });
+            music.setMusicTimePercent(percent.getValue() / 100);
+            timePosition.setText(convertTime(music.getMusicTimePosition()));
+        }
     }
 
     public void setRote() {
@@ -251,103 +270,106 @@ public class MusicPlayerController implements javafx.fxml.Initializable {
     }
 
     public void play(MouseEvent mouseEvent) {
-        if (statePlay == false) {
-            playButton.setGlyphName("PAUSE");
-            statePlay = true;
-            if (music == null) {
-                String source = songs.get(indexSong).getPath();
-                music = new WavMusic(source);
+        if(songs.size() > 0) {
+            if (statePlay == false) {
+                playButton.setGlyphName("PAUSE");
+                statePlay = true;
+                if (music == null) {
+                    String source = songs.get(indexSong).getPath();
+                    music = new Music(source);
+                }
+                if (music.isPause()) {
+                    music.play();
+                }
+                music.setVolume(volumeValue);
+                System.out.println("Playing");
+                setRote();
+                setTimePosition();
+            } else {
+                playButton.setGlyphName("PLAY");
+                music.pause();
+                statePlay = false;
+                System.out.println("Pausing");
             }
-            if (music.isPause()) {
-                music.play();
-            }
-            music.setVolume((float) volume.getValue() / 100);
-            System.out.println("Playing");
-            setRote();
-            setTimePosition();
-        } else {
-            playButton.setGlyphName("PLAY");
-            music.pause();
-            statePlay = false;
-            System.out.println("Pausing");
         }
     }
 
     public void next(MouseEvent mouseEvent) {
         image.setRotate(0);
-        if (indexSong == songs.size() - 1) {
-            if (stateLoop == true) {
-                indexSong = 0;
-                changeTheme();
+        if (songs.size() > 0){
+            if (indexSong == songs.size() - 1) {
+                if (stateLoop == true) {
+                    indexSong = 0;
+                    changeTheme();
+                    music.stop();
+                    createMusic();
+                    music.play();
+                    System.out.println("Next");
+                } else {
+                    music.stop();
+                    music = null;
+                    indexSong = 0;
+                    changeTheme();
+                    timePosition.setText("00:00");
+                    playButton.setGlyphName("PLAY");
+                    statePlay = false;
+                    System.out.println("End list");
+                }
+            } else {
+                indexSong++;
                 music.stop();
-                music = new WavMusic(songs.get(indexSong).getPath());
+                createMusic();
                 music.play();
                 changeTheme();
                 setTimeEnd();
                 System.out.println("Next");
-            } else {
-                music.stop();
-                music = null;
-                indexSong = 0;
-                changeTheme();
-                timePosition.setText("00:00");
-                playButton.setGlyphName("PLAY");
-                statePlay = false;
-                System.out.println("End list");
             }
-        } else {
-            if (stateRandom == true) {
-                indexSong = (int) (Math.random() * songs.size());
-            } else {
-                indexSong++;
-            }
-            music.stop();
-            music = new WavMusic(songs.get(indexSong).getPath());
-            music.play();
-            changeTheme();
-            setTimeEnd();
-            System.out.println("Next");
         }
     }
 
     public void previous(MouseEvent mouseEvent) {
-        image.setRotate(0);
-        if (indexSong == 0) {
-            indexSong = songs.size() - 1;
-        } else {
-            indexSong--;
+        if (songs.size() > 0) {
+            image.setRotate(0);
+            if (indexSong == 0) {
+                indexSong = songs.size() - 1;
+            } else {
+                indexSong--;
+            }
+            music.stop();
+            createMusic();
+            music.play();
+            changeTheme();
+
+            System.out.println("Previous");
         }
-        music.stop();
-        music = new WavMusic(songs.get(indexSong).getPath());
-        music.play();
-        changeTheme();
-        setTimeEnd();
-        System.out.println("Previous");
     }
 
     public void loop(MouseEvent mouseEvent) {
-        if (stateLoop == false) {
-            unLoop.setVisible(false);
-            stateLoop = true;
-            System.out.println("Loop");
-        } else {
-            unLoop.setVisible(true);
-            stateLoop = false;
-            System.out.println("Un Loop");
+        if(songs.size() > 0){
+            if (stateLoop == false) {
+                unLoop.setVisible(false);
+                stateLoop = true;
+                System.out.println("Loop");
+            } else {
+                unLoop.setVisible(true);
+                stateLoop = false;
+                System.out.println("Un Loop");
+            }
         }
     }
 
     public void random(MouseEvent mouseEvent) {
-        if (stateRandom == false) {
-            unRandom.setVisible(false);
-            stateRandom = true;
-            System.out.println("Random");
-        } else {
-            unRandom.setVisible(true);
-            stateRandom = false;
-            System.out.println("Un Random");
+        if(songs.size() > 0){
+            if (stateRandom == false) {
+                unRandom.setVisible(false);
+                stateRandom = true;
+                System.out.println("Random");
+            } else {
+                unRandom.setVisible(true);
+                stateRandom = false;
+                System.out.println("Un Random");
+            }
         }
-
     }
 
     public void showVolume(MouseEvent mouseEvent) {
@@ -359,8 +381,11 @@ public class MusicPlayerController implements javafx.fxml.Initializable {
     }
 
     public void setVolume(MouseEvent mouseEvent) {
-        music.setVolume((float) (volume.getValue() / 100));
-        hideVolume();
+        if(songs.size() > 0) {
+            volumeValue = (float) (volume.getValue() / 100);
+            setVolume();
+            hideVolume();
+        }
     }
 
     public void showPopup(MouseEvent mouseEvent) {
