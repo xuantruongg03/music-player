@@ -34,39 +34,53 @@ public class Music {
         return pause;
     }
 
-    public void play(){
+    public void play() {
         player.play();
         pause = false;
-    };
+    }
 
-    public void pause(){
+    ;
+
+    public void pause() {
         player.pause();
         pause = true;
-    };
+    }
 
-    public void stop(){
+    ;
+
+    public void stop() {
         player.stop();
         pause = true;
-    };
+    }
 
-    public long getMusicTimeLength(){
+    ;
+
+    public long getMusicTimeLength() {
         return (long) player.getTotalDuration().toSeconds();
-    };
+    }
 
-    public double getMusicTimePercent(){
+    ;
+
+    public double getMusicTimePercent() {
         return (double) player.getCurrentTime().toSeconds() / player.getTotalDuration().toSeconds();
     }
 
-    public void setMusicTimePercent(double timePercent){
+    public void setMusicTimePercent(double timePercent) {
         player.seek(player.getTotalDuration().multiply(timePercent));
 
-    };
+    }
 
-    public float getVolume(){
+    ;
+
+    public float getVolume() {
         return (float) player.getVolume();
-    };
+    }
 
-    public void setVolume(float volume){
+    ;
+
+    public void setVolume(float volume) {
         player.setVolume(volume);
-    };
+    }
+
+    ;
 }

@@ -136,11 +136,11 @@ public class MusicPlayerController implements javafx.fxml.Initializable {
                             timePosition.setText(convertTime(music.getMusicTimePosition()));
                             percent.setValue(music.getMusicTimePercent() * 100);
                             if (percent.getValue() >= 99.5) {
-                                if (stateRandom == true) {
-                                    indexSong = (int) (Math.random() * songs.size());
-                                } else {
-                                    indexSong++;
-                                }
+//                                if (stateRandom == true) {
+//                                    indexSong = (int) (Math.random() * songs.size());
+//                                } else {
+//                                    indexSong++;
+//                                }
                                 next(null);
                             }
                             setTimeEnd();
@@ -152,13 +152,17 @@ public class MusicPlayerController implements javafx.fxml.Initializable {
             }
         }, 0, 1000);
     }
-
+    private void setInitTimePositon() {
+        timePosition.setText("00:00");
+    }
     public void setTimeEnd() {
         timeEnd.setText(convertTime(music.getMusicTimeLength()));
     }
-    public  void  setVolume(){
+
+    public void setVolume() {
         music.setVolume(volumeValue);
     }
+
     public void addSong() {
         if (statePlay == true) {
             music.stop();
@@ -235,21 +239,23 @@ public class MusicPlayerController implements javafx.fxml.Initializable {
         music.stop();
         createMusic();
         music.play();
-        setRote();
     }
 
     public void setPercent(MouseEvent mouseEvent) {
-        if(songs.size() > 0) {
+        if (songs.size() > 0) {
             if (statePlay == true) {
                 music.pause();
-                music.setMusicTimePercent(percent.getValue()/100);
+                music.setMusicTimePercent(percent.getValue() / 100);
                 music.play();
             } else {
-                music.setMusicTimePercent(percent.getValue()/100);
+                music.setMusicTimePercent(percent.getValue() / 100);
             }
             music.setMusicTimePercent(percent.getValue() / 100);
             timePosition.setText(convertTime(music.getMusicTimePosition()));
         }
+    }
+    private void setInitPercent() {
+        percent.setValue(0);
     }
 
     public void setRote() {
@@ -270,18 +276,16 @@ public class MusicPlayerController implements javafx.fxml.Initializable {
     }
 
     public void play(MouseEvent mouseEvent) {
-        if(songs.size() > 0) {
+        if (songs.size() > 0) {
             if (statePlay == false) {
                 playButton.setGlyphName("PAUSE");
                 statePlay = true;
                 if (music == null) {
-                    String source = songs.get(indexSong).getPath();
-                    music = new Music(source);
+                    createMusic();
                 }
                 if (music.isPause()) {
                     music.play();
                 }
-                music.setVolume(volumeValue);
                 System.out.println("Playing");
                 setRote();
                 setTimePosition();
@@ -295,21 +299,14 @@ public class MusicPlayerController implements javafx.fxml.Initializable {
     }
 
     public void next(MouseEvent mouseEvent) {
-        image.setRotate(0);
-        if (songs.size() > 0){
+//        image.setRotate(0);
+        if (songs.size() > 0) {
             if (indexSong == songs.size() - 1) {
                 if (stateLoop == true) {
                     indexSong = 0;
-                    changeTheme();
-                    music.stop();
-                    createMusic();
-                    music.play();
-                    System.out.println("Next");
                 } else {
                     music.stop();
                     music = null;
-                    indexSong = 0;
-                    changeTheme();
                     timePosition.setText("00:00");
                     playButton.setGlyphName("PLAY");
                     statePlay = false;
@@ -317,16 +314,22 @@ public class MusicPlayerController implements javafx.fxml.Initializable {
                 }
             } else {
                 indexSong++;
+            }
+            if (statePlay) {
                 music.stop();
                 createMusic();
                 music.play();
                 changeTheme();
+            } else {
+                changeSong();
+                changeTheme();
+                music.stop();
+                setInitTimePositon();
+                setInitPercent();
                 setTimeEnd();
-                System.out.println("Next");
             }
         }
     }
-
     public void previous(MouseEvent mouseEvent) {
         if (songs.size() > 0) {
             image.setRotate(0);
@@ -335,17 +338,25 @@ public class MusicPlayerController implements javafx.fxml.Initializable {
             } else {
                 indexSong--;
             }
-            music.stop();
-            createMusic();
-            music.play();
-            changeTheme();
-
             System.out.println("Previous");
+            if (statePlay) {
+                music.stop();
+                createMusic();
+                music.play();
+                changeTheme();
+            } else {
+                changeSong();
+                changeTheme();
+                music.stop();
+                setInitTimePositon();
+                setInitPercent();
+                setTimeEnd();
+            }
         }
     }
 
     public void loop(MouseEvent mouseEvent) {
-        if(songs.size() > 0){
+        if (songs.size() > 0) {
             if (stateLoop == false) {
                 unLoop.setVisible(false);
                 stateLoop = true;
@@ -359,7 +370,7 @@ public class MusicPlayerController implements javafx.fxml.Initializable {
     }
 
     public void random(MouseEvent mouseEvent) {
-        if(songs.size() > 0){
+        if (songs.size() > 0) {
             if (stateRandom == false) {
                 unRandom.setVisible(false);
                 stateRandom = true;
@@ -381,7 +392,7 @@ public class MusicPlayerController implements javafx.fxml.Initializable {
     }
 
     public void setVolume(MouseEvent mouseEvent) {
-        if(songs.size() > 0) {
+        if (songs.size() > 0) {
             volumeValue = (float) (volume.getValue() / 100);
             setVolume();
             hideVolume();

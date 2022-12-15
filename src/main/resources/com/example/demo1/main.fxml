@@ -9,65 +9,85 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="602.0" prefWidth="803.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo1.MusicPlayerController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="602.0"
+            prefWidth="803.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.demo1.MusicPlayerController">
     <children>
         <AnchorPane fx:id="container" prefHeight="602.0" prefWidth="803.0" style="-fx-background-color: #CFF5E7;">
             <children>
-                <AnchorPane layoutX="56.0" layoutY="96.0" prefHeight="374.0" prefWidth="309.0" style="-fx-background-color: #59C1BD; -fx-background-radius: 40;">
+                <AnchorPane layoutX="56.0" layoutY="96.0" prefHeight="374.0" prefWidth="309.0"
+                            style="-fx-background-color: #59C1BD; -fx-background-radius: 40;">
                     <children>
-                        <FontAwesomeIcon id="test" fx:id="playButton" glyphName="PLAY" layoutX="150.0" layoutY="342.0" onMouseClicked="#play" size="18" text="" textAlignment="CENTER" wrappingWidth="8.585701942443848" />
-                        <FontAwesomeIcon fx:id="next" glyphName="STEP_FORWARD" layoutX="208.0" layoutY="343.0" onMouseClicked="#next" size="18" text="" />
-                        <FontAwesomeIcon fx:id="previous" glyphName="STEP_BACKWARD" layoutX="94.0" layoutY="343.0" onMouseClicked="#previous" size="18" />
-                        <FontAwesomeIcon fx:id="random" glyphName="RANDOM" layoutX="41.0" layoutY="343.0" onMouseClicked="#random" size="18" />
-                        <ImageView fx:id="image" fitHeight="262.0" fitWidth="262.0" layoutX="24.0" layoutY="35.0" pickOnBounds="true" preserveRatio="true" />
-                        <FontAwesomeIcon glyphName="REFRESH" layoutX="256.0" layoutY="343.0" onMouseClicked="#loop" size="18" />
-                        <Line fx:id="unRandom" endX="-12.000007629394531" endY="14.5714111328125" layoutX="53.0" layoutY="331.0" startX="5.999992370605469" startY="-3.4285888671875" strokeWidth="2.5" visible="true" />
-                        <Line fx:id="unLoop" endX="-9.999969482421875" endY="15.5714111328125" layoutX="266.0" layoutY="330.0" startX="5.999992370605469" startY="-3.4285888671875" strokeWidth="2.5" visible="false" />
+                        <FontAwesomeIcon id="test" fx:id="playButton" glyphName="PLAY" layoutX="150.0" layoutY="342.0"
+                                         onMouseClicked="#play" size="18" text="" textAlignment="CENTER"
+                                         wrappingWidth="8.585701942443848"/>
+                        <FontAwesomeIcon fx:id="next" glyphName="STEP_FORWARD" layoutX="208.0" layoutY="343.0"
+                                         onMouseClicked="#next" size="18" text=""/>
+                        <FontAwesomeIcon fx:id="previous" glyphName="STEP_BACKWARD" layoutX="94.0" layoutY="343.0"
+                                         onMouseClicked="#previous" size="18"/>
+                        <FontAwesomeIcon fx:id="random" glyphName="RANDOM" layoutX="41.0" layoutY="343.0"
+                                         onMouseClicked="#random" size="18"/>
+                        <ImageView fx:id="image" fitHeight="262.0" fitWidth="262.0" layoutX="24.0" layoutY="35.0"
+                                   pickOnBounds="true" preserveRatio="true"/>
+                        <FontAwesomeIcon glyphName="REFRESH" layoutX="256.0" layoutY="343.0" onMouseClicked="#loop"
+                                         size="18"/>
+                        <Line fx:id="unRandom" endX="-12.000007629394531" endY="14.5714111328125" layoutX="53.0"
+                              layoutY="331.0" startX="5.999992370605469" startY="-3.4285888671875" strokeWidth="2.5"
+                              visible="true"/>
+                        <Line fx:id="unLoop" endX="-9.999969482421875" endY="15.5714111328125" layoutX="266.0"
+                              layoutY="330.0" startX="5.999992370605469" startY="-3.4285888671875" strokeWidth="2.5"
+                              visible="false"/>
                     </children>
                 </AnchorPane>
                 <AnchorPane layoutX="390.0" layoutY="96.0" prefHeight="374.0" prefWidth="370.0">
                     <children>
                         <AnchorPane layoutY="14.0" prefHeight="60.0" prefWidth="378.0">
                             <children>
-                                <Label fx:id="nameSong" layoutX="21.0" layoutY="-4.0" prefHeight="36.0" prefWidth="282.0">
+                                <Label fx:id="nameSong" layoutX="21.0" layoutY="-4.0" prefHeight="36.0"
+                                       prefWidth="282.0">
                                     <font>
-                                        <Font name="Arial Bold" size="25.0" />
+                                        <Font name="Arial Bold" size="25.0"/>
                                     </font>
                                 </Label>
                                 <Label fx:id="singer" layoutX="28.0" layoutY="36.0" text="">
                                     <font>
-                                        <Font name="System Bold" size="13.0" />
+                                        <Font name="System Bold" size="13.0"/>
                                     </font>
                                 </Label>
                                 <Label fx:id="rate" layoutX="307.0" layoutY="13.0" text="4.0" visible="false">
                                     <font>
-                                        <Font name="System Bold" size="25.0" />
+                                        <Font name="System Bold" size="25.0"/>
                                     </font>
                                 </Label>
                                 <Label layoutX="343.0" layoutY="27.0" text="/5" visible="false">
                                     <font>
-                                        <Font name="System Bold" size="15.0" />
+                                        <Font name="System Bold" size="15.0"/>
                                     </font>
                                 </Label>
                             </children>
                         </AnchorPane>
-                        <ScrollPane fx:id="list" layoutX="19.0" layoutY="98.0" prefHeight="261.0" prefWidth="347.0" style="-fx-background: #CFF5E7; -fx-background-color: #CFF5E7;" vbarPolicy="NEVER" />
+                        <ScrollPane fx:id="list" layoutX="19.0" layoutY="98.0" prefHeight="261.0" prefWidth="347.0"
+                                    style="-fx-background: #CFF5E7; -fx-background-color: #CFF5E7;" vbarPolicy="NEVER"/>
                     </children>
                 </AnchorPane>
-                <Slider fx:id="percent" layoutX="50.0" layoutY="530.0" opacity="0.49" prefHeight="24.0" prefWidth="612.0" onMouseReleased="#setPercent" />
+                <Slider fx:id="percent" layoutX="50.0" layoutY="530.0" opacity="0.49" prefHeight="24.0"
+                        prefWidth="612.0" onMouseReleased="#setPercent"/>
                 <Label fx:id="timeEnd" layoutX="666.0" layoutY="534.0" text="00:00">
                     <font>
-                        <Font size="11.0" />
+                        <Font size="11.0"/>
                     </font>
                 </Label>
                 <Label fx:id="timePosition" layoutX="14.0" layoutY="534.0" text="00:00">
                     <font>
-                        <Font size="11.0" />
+                        <Font size="11.0"/>
                     </font>
                 </Label>
-                <FontAwesomeIcon glyphName="VOLUME_UP" layoutX="761.0" layoutY="547.0" onMouseClicked="#showVolume" size="15" />
-                <FontAwesomeIcon fx:id="showPopup" glyphName="LIST" layoutX="727.0" layoutY="546.0" onMouseClicked="#showPopup" size="15" />
-                <Slider fx:id="volume" layoutX="756.0" layoutY="447.0" onMouseReleased="#setVolume" orientation="VERTICAL" prefHeight="74.0" prefWidth="24.0" value="30.0" visible="false" />
+                <FontAwesomeIcon glyphName="VOLUME_UP" layoutX="761.0" layoutY="547.0" onMouseClicked="#showVolume"
+                                 size="15"/>
+                <FontAwesomeIcon fx:id="showPopup" glyphName="LIST" layoutX="727.0" layoutY="546.0"
+                                 onMouseClicked="#showPopup" size="15"/>
+                <Slider fx:id="volume" layoutX="756.0" layoutY="447.0" onMouseReleased="#setVolume"
+                        orientation="VERTICAL" prefHeight="74.0" prefWidth="24.0" value="30.0" visible="false"/>
             </children>
         </AnchorPane>
     </children>

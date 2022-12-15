@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+
 public class MusicPlayerApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
