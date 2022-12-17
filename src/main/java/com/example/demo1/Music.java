@@ -12,6 +12,7 @@ public class Music {
     private MediaPlayer player;
     private boolean pause;
 
+    //Constructor
     public Music(String musicLocation) {
         try {
             musicPath = new File(musicLocation);
@@ -26,10 +27,12 @@ public class Music {
         }
     }
 
+    //Trả về thowif gian hiện tại theo giây
     public long getMusicTimePosition() {
         return (long) player.getCurrentTime().toSeconds();
     }
 
+    //Kiểm tra xem có đang dừng hay không
     public boolean isPause() {
         return pause;
     }
